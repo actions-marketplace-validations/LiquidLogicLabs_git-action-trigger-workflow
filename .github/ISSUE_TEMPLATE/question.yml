@@ -1,50 +1,38 @@
 name: ❓ Question
-description: Ask a question or get help
-title: "[Question]: "
+description: Ask how to use this action
 labels: ["question"]
 body:
   - type: markdown
     attributes:
       value: |
-        Have a question? We're here to help! Please provide as much detail as possible.
+        Please check the repository README first — inputs, outputs and worked
+        examples live there.
 
   - type: textarea
     id: question
     attributes:
-      label: Question
-      description: What would you like to know?
-      placeholder: How do I...
+      label: Your question
+    validations:
+      required: true
+
+  - type: dropdown
+    id: platform
+    attributes:
+      label: Which platform
+      options:
+        - GitHub Actions (github.com)
+        - GitHub Actions (self-hosted runner)
+        - Gitea Actions
+        - act (locally)
+        - Not platform specific
     validations:
       required: true
 
   - type: textarea
-    id: context
+    id: workflow
     attributes:
-      label: Context
-      description: What are you trying to accomplish? Share your workflow YAML (remove sensitive info)
+      label: What you have tried
+      description: The workflow step you are working with, if there is one. Redact tokens.
       render: yaml
-      placeholder: |
-        - uses: LiquidLogicLabs/git-action-trigger-workflow@v2
-          with:
-            workflow_name: Deploy
     validations:
       required: false
-
-  - type: input
-    id: gitea-version
-    attributes:
-      label: Gitea Version
-      description: Version of Gitea you're using (if relevant)
-      placeholder: 1.23.0
-    validations:
-      required: false
-
-  - type: textarea
-    id: tried
-    attributes:
-      label: What Have You Tried?
-      description: What have you already tried to solve this?
-      placeholder: I've tried...
-    validations:
-      required: false
-

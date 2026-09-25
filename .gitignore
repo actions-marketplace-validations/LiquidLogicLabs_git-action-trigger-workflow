@@ -25,7 +25,6 @@ pnpm-debug.log*
 
 # IDE and editor files
 .idea/
-.bmad-core/
 .github/chatmodes/
 *.swp
 *.swo
@@ -46,3 +45,4 @@ coverage/
 
 # npm registry auth (keep local; do not commit credentials)
 .npmrc
+_bmad-output/

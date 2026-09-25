@@ -1,51 +1,49 @@
 name: 💡 Feature Request
-description: Suggest a new feature or enhancement
-title: "[Feature]: "
+description: Suggest a capability this action does not have
 labels: ["enhancement"]
 body:
-  - type: markdown
-    attributes:
-      value: |
-        Thanks for suggesting a feature! Please fill out the form below to help us understand your request.
-
   - type: textarea
     id: problem
     attributes:
-      label: Problem Statement
-      description: What problem does this feature solve? What use case does it address?
-      placeholder: I need to...
+      label: The problem
+      description: What are you trying to automate, and where does this action stop short? Describe the need rather than the implementation — it often has a simpler answer.
     validations:
       required: true
 
   - type: textarea
-    id: solution
+    id: proposal
     attributes:
-      label: Proposed Solution
-      description: How would you like this feature to work?
-      placeholder: The action should...
+      label: What you would like it to do
+      description: If it would mean a new input or output, suggest a name. Inputs and outputs here are kebab-case.
     validations:
       required: true
 
-  - type: textarea
-    id: alternatives
+  - type: checkboxes
+    id: platforms
     attributes:
-      label: Alternatives Considered
-      description: Any alternative solutions or features you've considered
-      placeholder: I tried...
+      label: Where it needs to work
+      description: Anything added here has to behave the same everywhere it is claimed to run, so this shapes how much work it is.
+      options:
+        - label: GitHub Actions
+          required: false
+        - label: Gitea Actions
+          required: false
+        - label: act (locally)
+          required: false
+
+  - type: textarea
+    id: workaround
+    attributes:
+      label: How you work around it today
+      description: If there is no workaround, say so — that is useful signal.
     validations:
       required: false
 
   - type: textarea
-    id: examples
+    id: example
     attributes:
-      label: Usage Example
-      description: How would you use this feature? Show example YAML if applicable
+      label: How it would look in a workflow
       render: yaml
-      placeholder: |
-        - uses: LiquidLogicLabs/git-action-trigger-workflow@v2
-          with:
-            workflow_name: Deploy
-            new-feature: value
     validations:
       required: false
 
@@ -53,16 +51,6 @@ body:
     id: contribution
     attributes:
       label: Contribution
-      description: Are you willing to contribute this feature?
       options:
-        - label: I'm willing to submit a PR for this feature
+        - label: I would be willing to open a pull request for this
           required: false
-
-  - type: textarea
-    id: context
-    attributes:
-      label: Additional Context
-      description: Any other context, mockups, or examples
-    validations:
-      required: false
-

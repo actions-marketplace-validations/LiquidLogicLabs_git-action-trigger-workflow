@@ -16,21 +16,20 @@ const ref = process.env.TEST_GITHUB_REF || 'main';
 
 const logger = new Logger(false);
 
-describe('github e2e', () => {
-  const [owner, repoName] = (repo || '').split('/');
+const [envOwner, envRepoName] = (repo || '').split('/');
 
-  beforeAll(() => {
-    if (!token) {
-      throw new Error('GITHUB_TOKEN or TEST_GITHUB_TOKEN required for e2e');
-    }
-    if (!owner || !repoName) {
-      throw new Error('TEST_GITHUB_REPO must be owner/repo');
-    }
-  });
+// Skip, do not throw, when no token is available -- see the note in gitea.e2e.test.ts.
+const githubConfigured = Boolean(token && envOwner && envRepoName);
+const describeGithub = githubConfigured ? describe : describe.skip;
+
+describeGithub('github e2e', () => {
+  const owner = envOwner;
+  const repoName = envRepoName;
 
   const http = createHttpClient({
     baseUrl: apiUrl,
-    token: token!,
+    // See the note in gitea.e2e.test.ts: describe.skip still evaluates this body.
+    token: token ?? 'unset',
     logger,
     verbose: false,
     userAgent: 'git-action-trigger-workflow-e2e',
@@ -43,7 +42,7 @@ describe('github e2e', () => {
     logger,
     owner,
     repo: repoName,
-    token: token!,
+    token: token ?? 'unset',
     verbose: false,
   });
 
@@ -52,14 +51,16 @@ describe('github e2e', () => {
     expect(Array.isArray(workflows)).toBe(true);
   });
 
-  test('dispatches workflow when name provided', async () => {
-    if (!workflowName) {
-      throw new Error('TEST_GITHUB_WORKFLOW required (e.g. "E2E Trigger Test")');
-    }
+  // Needs TEST_GITHUB_WORKFLOW on top of the suite's own configuration.
+  const testDispatch = workflowName ? test : test.skip;
+  testDispatch('dispatches workflow when name provided', async () => {
+    // Non-null is sound here: testDispatch is test.skip unless workflowName is set.
+    // The previous `if (!workflowName) throw` provided this narrowing.
+    const wanted = workflowName as string;
     const { workflows } = await client.listWorkflows();
-    const wf = workflows.find((w) => w.name === workflowName || w.path?.includes(workflowName));
+    const wf = workflows.find((w) => w.name === wanted || w.path?.includes(wanted));
     if (!wf) {
-      throw new Error(`Workflow '${workflowName}' not found in repository ${repo}`);
+      throw new Error(`Workflow '${wanted}' not found in repository ${repo}`);
     }
     const res = await client.dispatchWorkflow(wf, ref, {});
     expect(res.status).toBeGreaterThanOrEqual(200);

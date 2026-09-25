@@ -248,7 +248,25 @@ The action sends the token as `Authorization: token <token>` in API requests.
 
 ## Outputs
 
-This action does not produce outputs. It triggers a workflow and reports success/failure via the step status.
+| Output | Description |
+| ------ | ----------- |
+| `status` | HTTP status code returned by the dispatch request (typically `204` on Gitea, `204` on GitHub). |
+| `endpoint` | The API endpoint URL used to dispatch the workflow. Useful for debugging which host and path were called. |
+
+```yaml
+- name: Trigger workflow
+  id: trigger
+  uses: LiquidLogicLabs/git-action-trigger-workflow@v2
+  with:
+    repository: owner/repo
+    workflow: deploy.yml
+    token: ${{ secrets.DISPATCH_TOKEN }}
+
+- name: Report
+  run: echo "dispatched via ${{ steps.trigger.outputs.endpoint }} (HTTP ${{ steps.trigger.outputs.status }})"
+```
+
+Failure is still reported through the step status; the outputs describe the dispatch that was made.
 
 ## Versioning
 
